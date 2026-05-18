@@ -1,40 +1,32 @@
 # Stock Momentum Watcher
 
-Simple CLI app that rates a stock as **STAY / TRIM / CUT** using moving averages and volume behavior.
-
-## What it checks
-
-- **Strong uptrend (STAY bias):**
-  - Price above 20-day moving average (MA20)
-  - MA20 above MA50
-  - Pullback reclaim behavior
-- **Warning phase (TRIM bias):**
-  - Repeated closes below MA20
-  - Failed rebounds near MA20
-  - Heavy-volume down days
-- **Possible trend break (CUT bias):**
-  - Decisive break below MA50
-  - Optional weak earnings reaction flag
-  - Optional sector weakness flag
-
-It also prints a **volume condition note** (constructive / neutral / distribution risk).
+## Features
+- Monitors up to **20 stocks** per run.
+- Uses MA/volume rules to classify each stock as **STAY / TRIM / CUT**.
+- Provides a **table output** in CLI and in a simple web UI.
+- Includes a **score key** so each numeric score has an action meaning.
 
 ## Install
-
 ```bash
 pip install -r requirements.txt
 ```
 
-## Run
-
+## CLI Usage
 ```bash
-python stock_watcher.py NVDA
-python stock_watcher.py AMD --weak-sector
-python stock_watcher.py SMCI --weak-earnings-reaction --weak-sector
+python stock_watcher.py NVDA,AMD,SMCI
+python stock_watcher.py NVDA,AMD --weak-sector
+python stock_watcher.py NVDA,AMD --weak-earnings-reaction --period 6mo
 ```
 
-## Automation ideas
+The run prints a table with Symbol, Action, Score, Reason, and Volume note.
 
-- Run every close with cron/GitHub Actions.
-- Pipe output to Slack/Discord/email.
-- Track score history in CSV and alert only on state changes.
+Score key used by the app:
+- `CUT <= -4`
+- `TRIM = -3..-1`
+- `STAY >= 0`
+
+## UI Usage (table view)
+```bash
+streamlit run ui.py
+```
+Then open the local URL shown by Streamlit.
